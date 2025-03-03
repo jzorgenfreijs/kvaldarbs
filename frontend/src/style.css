@@ -62,6 +62,15 @@ button:focus-visible {
   padding: 2em;
 }
 
+.v-messages {
+  min-height: 0px !important;
+}
+
+.v-input__details {
+  padding-inline: 10px !important;
+  min-height: 0px !important;
+}
+
 #app {
   height: 100vh !important;
   width: 100%;

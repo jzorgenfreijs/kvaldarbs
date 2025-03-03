@@ -11,7 +11,7 @@ const isOpen = ref(false);
       <div class="flex justify-between h-16 px-10 shadow items-center bg-white">
         <div class="flex items-center space-x-8">
           <router-link to="/" class="text-xl font-bold cursor-pointer text-black">
-            Classify
+            <img src="@/assets/logo.png" width="64">
           </router-link>
 
           <div class="hidden justify-around space-x-4 md:flex">
