@@ -2,21 +2,12 @@
   import { ref } from 'vue'
   import { useRouter } from 'vue-router';
   import { useField, useForm } from 'vee-validate'
+  import axios from 'axios';
 
   const router = useRouter();
 
   const { handleSubmit, handleReset } = useForm({
     validationSchema: {
-      name (value) {
-        if (value?.length >= 2) return true
-
-        return 'Name needs to be at least 2 characters.'
-      },
-      phone (value) {
-        if (/^[0-9-]{7,}$/.test(value)) return true
-
-        return 'Phone number needs to be at least 8 digits.'
-      },
       email (value) {
         if (/^[a-z0-9.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
 
@@ -29,14 +20,22 @@
       },
     },
   })
-  const name = useField('name')
-  const phone = useField('phone')
   const email = useField('email')
   const password = useField('password')
+  const show_pass = ref(false)
 
-  const submit = handleSubmit(values => {
-    loading = true
-  })
+  const getToken = async () => {
+    await axios.get('/sanctum/csrf-cookie');
+  }
+
+  const submit = async () => {
+    await getToken();
+    await axios.post('/login', {
+      email: email.value.value,
+      password: password.value.value
+    })
+    router.push('/')
+  }
 </script>
 
 
@@ -58,13 +57,15 @@
 
         <v-text-field
           v-model="password.value.value"
+          :append-inner-icon="show_pass ? 'mdi-eye' : 'mdi-eye-off'"
           :error-messages="password.errorMessage.value"
           :readonly="loading"
           :rules="[required]"
-          type="password"
+          :type="show_pass ? 'text' : 'password'"
           label="Password"
           placeholder="Enter your password"
           density="comfortable"
+          @click:append-inner="show_pass = !show_pass"
           class="my-2"
         ></v-text-field>
         
@@ -78,6 +79,7 @@
           Log In
         </v-btn>
 
+        <p><a class="cursor-pointer">Forgot password?</a></p>
         <p>Don't have an account? <router-link to="/register">Register</router-link></p>
   
       </form>

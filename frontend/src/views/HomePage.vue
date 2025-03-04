@@ -1,8 +1,18 @@
 <script setup>
 import HeaderBar from '../components/HeaderBar.vue';
+
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
+import axios from 'axios'
 
 const router = useRouter();
+
+const user = ref();
+onMounted(async () => {
+    const data = await axios.get('/api/user');
+    console.log(data);
+})
+
 </script>
 
 <template>

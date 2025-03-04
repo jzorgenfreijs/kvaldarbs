@@ -2,6 +2,7 @@
   import { ref } from 'vue'
   import { useRouter } from 'vue-router';
   import { useField, useForm } from 'vee-validate'
+  import axios from 'axios';
 
   const router = useRouter();
 
@@ -12,11 +13,6 @@
 
         return 'Name needs to be at least 2 characters.'
       },
-      phone (value) {
-        if (/^[0-9-]{7,}$/.test(value)) return true
-
-        return 'Phone number needs to be at least 8 digits.'
-      },
       email (value) {
         if (/^[a-z0-9.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
 
@@ -25,25 +21,35 @@
       password (value) {
         if (value?.length >= 8) return true
 
-        return 'Please enter your password'
+        return 'Password must contain 8 characters.'
+      },
+      confirm_pass (value) {
+        if (value == password.value.value) return true
+
+        return 'Password do not match.'
       },
     },
   })
   const name = useField('name')
-  const phone = useField('phone')
   const email = useField('email')
   const password = useField('password')
+  const confirm_pass = useField('confirm_pass')
 
-  const items = ref([
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-  ])
+  const getToken = async () => {
+    await axios.get('/sanctum/csrf-cookie');
+  }
 
-  const submit = handleSubmit(values => {
-    alert(JSON.stringify(values, null, 2))
-  })
+  const submit = async () => {
+    await getToken();
+    await axios.post('/register', {
+      name: name.value.value,
+      email: email.value.value,
+      password: password.value.value,
+      password_confirmation: confirm_pass.value.value
+    })
+    router.push('/')
+  }
+
 </script>
 
 
@@ -56,18 +62,10 @@
         <v-text-field
           v-model="name.value.value"
           :error-messages="name.errorMessage.value"
-          label="Name"
+          label="Full Name"
           placeholder="John Doe"
           density="comfortable"
           class="mb-auto"
-        ></v-text-field>
-    
-        <v-text-field
-          v-model="phone.value.value"
-          :error-messages="phone.errorMessage.value"
-          label="Phone Number"
-          density="comfortable"
-          class="my-2"
         ></v-text-field>
     
         <v-text-field
@@ -83,10 +81,20 @@
         <v-text-field
           v-model="password.value.value"
           :error-messages="password.errorMessage.value"
-          :readonly="loading"
           :rules="[required]"
           label="Password"
+          type="password"
           placeholder="Enter your password"
+          density="comfortable"
+          class="my-2"
+        ></v-text-field>
+
+        <v-text-field
+          v-model="confirm_pass.value.value"
+          :error-messages="confirm_pass.errorMessage.value"
+          :rules="[required]"
+          label="Confirm Password"
+          type="password"
           density="comfortable"
           class="my-2"
         ></v-text-field>
