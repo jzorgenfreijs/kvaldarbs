@@ -1,12 +1,11 @@
 <script setup>
   import { ref } from 'vue'
-  import { useRouter } from 'vue-router';
   import { useField, useForm } from 'vee-validate'
-  import axios from 'axios';
+  import { useAuthStore } from '../stores/auth';
 
-  const router = useRouter();
+  const authStore = useAuthStore();
 
-  const { handleSubmit, handleReset } = useForm({
+  const { handleSubmit } = useForm({
     validationSchema: {
       email (value) {
         if (/^[a-z0-9.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
@@ -20,22 +19,18 @@
       },
     },
   })
+  
   const email = useField('email')
   const password = useField('password')
   const show_pass = ref(false)
 
-  const getToken = async () => {
-    await axios.get('/sanctum/csrf-cookie');
-  }
-
-  const submit = async () => {
-    await getToken();
-    await axios.post('/login', {
+  const submit = handleSubmit(async () => {
+    await authStore.handleLogin({
       email: email.value.value,
       password: password.value.value
-    })
-    router.push('/')
-  }
+    });
+  });
+  
 </script>
 
 

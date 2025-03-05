@@ -1,10 +1,9 @@
-<script setup>
+<script setup lang="js">
   import { ref } from 'vue'
-  import { useRouter } from 'vue-router';
   import { useField, useForm } from 'vee-validate'
-  import axios from 'axios';
+  import { useAuthStore } from '../stores/auth';
 
-  const router = useRouter();
+  const authStore = useAuthStore();
 
   const { handleSubmit, handleReset } = useForm({
     validationSchema: {
@@ -35,23 +34,16 @@
   const password = useField('password')
   const confirm_pass = useField('confirm_pass')
 
-  const getToken = async () => {
-    await axios.get('/sanctum/csrf-cookie');
-  }
-
-  const submit = async () => {
-    await getToken();
-    await axios.post('/register', {
+  const submit = handleSubmit(async (values) => {
+    await authStore.handleRegister({
       name: name.value.value,
       email: email.value.value,
       password: password.value.value,
       password_confirmation: confirm_pass.value.value
-    })
-    router.push('/')
-  }
+    });
+  });
 
 </script>
-
 
 <template>
   <v-container fluid class="d-flex justify-center align-center h-screen bg-black">

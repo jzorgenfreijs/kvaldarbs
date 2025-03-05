@@ -3,15 +3,14 @@ import HeaderBar from '../components/HeaderBar.vue';
 
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
-import axios from 'axios'
+import { useAuthStore } from '../stores/auth';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
-const user = ref();
 onMounted(async () => {
-    const data = await axios.get('/api/user');
-    console.log(data);
-})
+    await authStore.getUser();
+});
 
 </script>
 
