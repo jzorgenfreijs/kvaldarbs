@@ -72,12 +72,13 @@ button:focus-visible {
 }
 
 #app {
-  height: 100% !important;
+  height: 100vh !important;
   width: 100%;
   margin: 0;
   padding: 0;
   font-weight: normal;
-  overflow-x: hidden;
+  overflow-x: visible !important;
+  overflow-y: scroll;
 }
 
 @media (prefers-color-scheme: light) {

@@ -20,8 +20,8 @@ const isOpen = ref(false);
           </div>
         </div>
 
-        <div class="hidden md:flex">
-          <HeaderButtons />
+        <div class="hidden pr-5 md:flex">
+          <HeaderButtons class="p-0 m-0" />
         </div>
 
         <div class="md:hidden">
