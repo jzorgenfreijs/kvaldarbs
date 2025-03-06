@@ -1,9 +1,11 @@
 <script setup lang="js">
   import { ref } from 'vue'
   import { useField, useForm } from 'vee-validate'
+  import { useRouter } from 'vue-router';
   import { useAuthStore } from '../stores/auth';
 
   const authStore = useAuthStore();
+  const router = useRouter();
 
   const { handleSubmit, handleReset } = useForm({
     validationSchema: {
@@ -48,7 +50,7 @@
 <template>
   <v-container fluid class="d-flex justify-center align-center h-screen bg-black">
     <v-card class="pa-6" min-width="375" elevation="10" color="grey-darken-4">
-      <v-card-title class="px-1">Registration</v-card-title>
+      <v-card-title class="px-1"><v-btn icon="mdi-arrow-left" :width="30" :height="30" rounded="lg" class="mr-2 mb-1" @click="router.push('/')"></v-btn>Registration</v-card-title>
 
       <form @submit.prevent="submit">
         <v-text-field
