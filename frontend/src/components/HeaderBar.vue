@@ -1,6 +1,15 @@
 <script setup>
-import { ref } from 'vue';
 import HeaderButtons from './HeaderButtons.vue';
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+
+const router = useRouter();
+const authStore = useAuthStore();
+
+onMounted(async () => {
+  await authStore.getUser();
+});
 
 const isOpen = ref(false);
 </script>
@@ -16,7 +25,8 @@ const isOpen = ref(false);
 
           <div class="hidden justify-around space-x-4 md:flex">
             <router-link class="relative text-gray-700 link-underline" to="/dashboard">Home</router-link>
-            <router-link class="relative text-gray-700 link-underline" to="/my-courses">My Courses</router-link>
+            <router-link class="relative text-gray-700 link-underline" to="/tests">Tests</router-link>
+            <router-link v-if="authStore.user" class="relative text-gray-700 link-underline" to="/my-tests">My Tests</router-link>
           </div>
         </div>
 
@@ -35,7 +45,8 @@ const isOpen = ref(false);
 
       <div v-if="isOpen" class="bg-white shadow-lg px-6 py-4 space-y-2 md:hidden">
         <router-link class="block text-gray-700 link-underline" to="/">Home</router-link>
-        <router-link class="block text-gray-700 link-underline" to="/">My Courses</router-link>
+        <router-link class="relative text-gray-700 link-underline" to="/tests">Tests</router-link>
+        <router-link v-if="authStore.user" class="relative text-gray-700 link-underline" to="/my-tests">My Tests</router-link>
 
         <div class="border-t mt-2 pt-2">
           <HeaderButtons class="px-1" />

@@ -29,18 +29,25 @@
 
         return 'Password do not match.'
       },
+      roleField (value) {
+        if (value != '') return true;
+
+        return 'Please select a role';
+      },
     },
   })
   const name = useField('name')
   const email = useField('email')
   const password = useField('password')
   const confirm_pass = useField('confirm_pass')
+  const roleField = useField('role', 'student');
 
   const submit = handleSubmit(async (values) => {
     await authStore.handleRegister({
       name: name.value.value,
       email: email.value.value,
       password: password.value.value,
+      role: roleField.value.value,
       password_confirmation: confirm_pass.value.value
     });
   });
@@ -92,6 +99,23 @@
           density="comfortable"
           class="my-2"
         ></v-text-field>
+
+        <p>Choose your role:</p>
+        <v-radio-group
+          v-model="roleField.value.value"
+          inline
+          default="student"
+          :error-messages="roleField.errorMessage.value"
+        >
+          <v-radio
+            label="Student"
+            value="student"
+          ></v-radio>
+          <v-radio
+            label="Teacher"
+            value="teacher"
+          ></v-radio>
+        </v-radio-group>
         
         <!-- <v-divider class="border-opacity-50 mb-3"></v-divider> -->
 

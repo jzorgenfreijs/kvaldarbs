@@ -3,6 +3,8 @@ import Home from "../views/HomePage.vue"
 import Login from "../views/Login.vue"
 import Register from "../views/Register.vue"
 import Profile from "../views/Profile.vue";
+import MyTests from "../views/MyTests.vue";
+import CreateTest from "../views/CreateTest.vue";
 
 const routes = [
   {
@@ -24,6 +26,16 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+  },
+  {
+    path: "/my-tests",
+    name: "My Tests",
+    component: MyTests,
+  },
+  {
+    path: "/create-test",
+    name: "Create Test",
+    component: CreateTest,
   },
 ];
 
