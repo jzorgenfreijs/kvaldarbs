@@ -1,11 +1,18 @@
 <script setup>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import { useField, useForm } from 'vee-validate'
   import { useRouter } from 'vue-router';
   import { useAuthStore } from '../stores/auth';
 
   const authStore = useAuthStore();
   const router = useRouter();
+
+  onMounted(async () => {
+    await authStore.getUser();
+    if (authStore.user) {
+      router.push('/')
+    }
+  });
 
   const { handleSubmit } = useForm({
     validationSchema: {

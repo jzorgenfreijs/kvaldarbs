@@ -43,4 +43,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function createdTests()
+    {
+        return $this->hasMany(Test::class, 'creator_id');
+    }
+
+    public function assignedTests()
+    {
+        return $this->belongsToMany(Test::class, 'test_assignments', 'student_id', 'test_id')
+            ->withPivot('status', 'created_at');
+    }
 }

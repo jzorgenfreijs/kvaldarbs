@@ -14,6 +14,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\TestAssignmentController;
+
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Tests
+    Route::apiResource('tests', TestController::class);
+    
+    // Test assignments
+    Route::post('tests/{test}/assign', [TestAssignmentController::class, 'assign']);
+    Route::post('tests/{test}/enroll', [TestAssignmentController::class, 'enroll']);
+    
+    // Public tests
+    Route::get('public-tests', [TestController::class, 'publicTests']);
 });
