@@ -100,6 +100,33 @@ class TestController extends Controller
         return response()->json($test->load('questions'), 201);
     }
 
+
+    public function publicIndex(Request $request)
+    {
+        $query = Test::withCount('questions')
+            ->where('is_public', true)
+            ->latest();
+        
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%'.$request->search.'%')
+                ->orWhere('description', 'like', '%'.$request->search.'%');
+        }
+        
+        $tests = $query->get()->map(function ($test) {
+            return [
+                'id' => $test->id,
+                'title' => $test->title,
+                'description' => $test->description,
+                'is_public' => $test->is_public,
+                'question_count' => $test->questions_count,
+                'created_at' => $test->created_at,
+                'has_password' => !empty($test->enrollment_password)
+            ];
+        });
+        
+        return response()->json($tests);
+    }
+
     /**
      * Display the specified resource.
      */

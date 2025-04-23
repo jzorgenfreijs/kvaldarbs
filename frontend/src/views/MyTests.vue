@@ -47,7 +47,7 @@ function handleRedirect() {
 <template>
   <div v-if="authStore.user">
     <HeaderBar />
-    <div class="h-[calc(100%-64px)] bg-gray-100">
+    <div class="!h-[calc(100vh-64px)] bg-gray-100 text-black">
       <div v-if="authStore.user.role == 'teacher'" class="h-[calc(100vh-64px)]">
         <div id="top" class="flex justify-end">
           <v-tooltip text="Add Test" location="bottom">
@@ -57,8 +57,7 @@ function handleRedirect() {
           </v-tooltip>
         </div>
         <v-divider class="border-4 border-black mb-3"></v-divider>
-        
-        <!-- Test List Section -->
+
         <div class="container mx-auto px-4">
           <h2 class="text-2xl font-bold mb-6 text-black">Your Tests</h2>
           
@@ -83,8 +82,7 @@ function handleRedirect() {
           </div>
         </div>
       </div>
-      
-      <!-- Student View -->
+
       <div v-else class="container mx-auto px-4 py-6">
         <h2 class="text-2xl font-bold mb-6">Your Enrolled Tests</h2>
         

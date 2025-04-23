@@ -24,11 +24,9 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function () {
     // Tests
     Route::apiResource('tests', TestController::class);
+    Route::get('/public-tests', [TestController::class, 'publicIndex']);
     
     // Test assignments
     Route::post('tests/{test}/assign', [TestAssignmentController::class, 'assign']);
     Route::post('tests/{test}/enroll', [TestAssignmentController::class, 'enroll']);
-    
-    // Public tests
-    Route::get('public-tests', [TestController::class, 'publicTests']);
 });

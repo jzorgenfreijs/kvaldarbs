@@ -5,6 +5,7 @@ import Register from "../views/Register.vue"
 import Profile from "../views/Profile.vue";
 import MyTests from "../views/MyTests.vue";
 import CreateTest from "../views/CreateTest.vue";
+import TestList from "../views/TestList.vue";
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: "/create-test",
     name: "Create Test",
     component: CreateTest,
+  },
+  {
+    path: "/tests",
+    name: "Tests",
+    component: TestList,
   },
 ];
 
