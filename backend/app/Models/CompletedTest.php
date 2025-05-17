@@ -5,18 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Answer extends Model
+class CompletedTest extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 
-        'test_id', 
-        'question_id', 
-        'response'
-    ];
-
-    protected $casts = [
-        'response' => 'array',
+        'user_id',
+        'test_id'
     ];
 }

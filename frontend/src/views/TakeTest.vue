@@ -13,7 +13,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const test = ref(null);
-const answers = ref({});
+const testQuestions = ref([]);
 const isSubmitting = ref(false);
 const errorMessage = ref('');
 
@@ -43,49 +43,30 @@ const loadTest = async () => {
       credentials: 'include'
     });
 
-    const responseText = await response.text();
-    let data;
-    try {
-      data = JSON.parse(responseText);
-    } catch {
-      console.error("Server returned non-JSON:", responseText);
-      throw new Error("Server returned an invalid response");
-    }
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        authStore.logout();
-        router.push('/login');
-        return;
-      }
-      throw new Error(data.message || `HTTP error! status: ${response.status}`);
-    }
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to load test');
 
     test.value = {
-      title: data.test_title || 'Untitled Test',
-      description: data.test_description || '',
-      questions: data.questions.map(question => ({
-        id: question.id,
-        type: question.type,
-        question_text: question.question_text,
-        options: question.options || (question.type === 'true_false' ? ['False', 'True'] : []),
-        order_index: question.order_index || 0
-      }))
+      title: data.test_title,
+      description: data.test_description
     };
 
-    // Initialize answers with proper structure
-    test.value.questions.forEach(question => {
-      answers.value[question.id] = question.type === 'text' ? '' : [];
-    });
+    testQuestions.value = data.questions.map(question => ({
+      id: question.id,
+      component: questionTypes.find(t => t.value === question.type).component,
+      type: question.type,
+      data: {
+        questionText: question.question_text,
+        options: question.options || (question.type === 'true_false' ? ['False', 'True'] : []),
+        correctAnswer: question.type === 'text' ? '' : 
+                     question.type === 'true_false' ? [0] : 
+                     question.type === 'single_choice' ? [] : []
+      }
+    }));
 
   } catch (error) {
     errorMessage.value = `Failed to load test: ${error.message}`;
-    console.error("Test loading error:", error);
   }
-};
-
-const updateAnswer = (questionId, value) => {
-  answers.value[questionId] = value;
 };
 
 const submitTest = async () => {
@@ -93,19 +74,16 @@ const submitTest = async () => {
   errorMessage.value = '';
 
   try {
-    // Collect all answers in the format expected by backend
+    await authStore.getToken()
+
     const submissionData = {
-      answers: test.value.questions.map(question => ({
+      answers: testQuestions.value.map(question => ({
         question_id: question.id,
-        answer: question.type === 'text' 
-          ? answers.value[question.id] 
-          : answers.value[question.id].join(',')
+        answer: question.data.correctAnswer
       }))
     };
 
-    console.log('Submitting test answers:', submissionData);
-
-    await authStore.getToken();
+    console.log('Submitting:', JSON.stringify(submissionData, null, 2));
 
     const response = await fetch(`http://localhost:8000/api/tests/${route.params.id}/submit`, {
       method: 'POST',
@@ -119,42 +97,25 @@ const submitTest = async () => {
       body: JSON.stringify(submissionData)
     });
 
-    if (response.status === 401) {
-      authStore.logout();
-      router.push('/login');
-      return;
-    }
-
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.message || 'Failed to submit test');
+      throw new Error(error.message || 'Submission failed');
     }
 
     const result = await response.json();
-    router.push(`/test-result/${result.id}`);
+    router.push(`/my-tests`);
 
   } catch (error) {
     errorMessage.value = error.message;
-    console.error('Submission error:', error);
   } finally {
     isSubmitting.value = false;
   }
 };
 
 onMounted(async () => {
-  try {
-    await authStore.getUser();
-    
-    if (!authStore.user) {
-      router.push('/login');
-      return;
-    }
-
-    await loadTest();
-  } catch (error) {
-    errorMessage.value = 'Failed to initialize: ' + error.message;
-    console.error('Initialization error:', error);
-  }
+  await authStore.getUser();
+  if (!authStore.user) router.push('/login');
+  else await loadTest();
 });
 </script>
 
@@ -169,16 +130,16 @@ onMounted(async () => {
 
         <div class="space-y-6 mb-8">
           <div 
-            v-for="question in test.questions" 
+            v-for="question in testQuestions" 
             :key="question.id" 
             class="bg-gray-50 p-4 rounded-lg"
           >
             <component 
-              :is="questionTypes.find(t => t.value === question.type).component"
-              :questionText="question.question_text"
-              :options="question.options"
-              :editable="false"
-              @update:modelValue="val => updateAnswer(question.id, val)"
+              :is="question.component"
+              :question-text="question.data.questionText"
+              :options="question.data.options"
+              :correct-answer="question.data.correctAnswer"
+              @update:correct-answer="val => question.data.correctAnswer = val"
             />
           </div>
         </div>

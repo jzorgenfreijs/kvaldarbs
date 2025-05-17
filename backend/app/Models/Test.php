@@ -35,4 +35,9 @@ class Test extends Model
     {
         return $this->hasMany(TestAssignment::class);
     }
+
+    public function completedTests()
+    {
+        return $this->hasMany(CompletedTest::class);
+    }
 }

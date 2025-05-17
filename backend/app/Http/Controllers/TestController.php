@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Test;
 use App\Models\Answer;
 use App\Models\Question;
+use App\Models\CompletedTest;
 use App\Models\TestAssignment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,9 @@ class TestController extends Controller
                 });
         } else {
             $tests = TestAssignment::where('student_id', $user->id)
+                ->whereDoesntHave('test.completedTests', function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
                 ->with(['test' => function($query) {
                     $query->withCount('questions');
                 }])
@@ -130,16 +134,13 @@ class TestController extends Controller
 
     public function getQuestions($test_id)
     {
-        // 1. Get the test details (title, description)
         $test = Test::select('title', 'description')
                 ->findOrFail($test_id);
         
-        // 2. Get all questions for this test
         $questions = Question::where('test_id', $test_id)
             ->orderBy('order_index')
             ->get(['id', 'type', 'question_text', 'options', 'order_index']);
         
-        // 3. Return combined data
         return response()->json([
             'test_title' => $test->title,
             'test_description' => $test->description,
@@ -149,20 +150,29 @@ class TestController extends Controller
     
     public function submitAnswers(Request $request, $test_id) {
         $validated = $request->validate([
-            'answers' => 'required|array', 
+            'answers' => 'required|array',
             'answers.*.question_id' => 'required|exists:questions,id',
             'answers.*.answer' => 'required',
         ]);
-    
+
         foreach ($validated['answers'] as $answer) {
+            $response = is_array($answer['answer']) 
+                ? json_encode($answer['answer'])
+                : $answer['answer'];
+
             Answer::create([
                 'user_id' => auth()->id(),
                 'question_id' => $answer['question_id'],
                 'test_id' => $test_id,
-                'response' => $answer['answer'],
+                'response' => $response,
             ]);
         }
-    
+
+        CompletedTest::firstOrCreate([
+            'user_id' => auth()->id(),
+            'test_id' => $test_id
+        ]);
+
         return response()->json(['message' => 'Answers submitted!']);
     }
 
