@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Test;
+use App\Models\Answer;
 use App\Models\Question;
 use App\Models\TestAssignment;
 use Illuminate\Http\Request;
@@ -125,6 +126,44 @@ class TestController extends Controller
         });
         
         return response()->json($tests);
+    }
+
+    public function getQuestions($test_id)
+    {
+        // 1. Get the test details (title, description)
+        $test = Test::select('title', 'description')
+                ->findOrFail($test_id);
+        
+        // 2. Get all questions for this test
+        $questions = Question::where('test_id', $test_id)
+            ->orderBy('order_index')
+            ->get(['id', 'type', 'question_text', 'options', 'order_index']);
+        
+        // 3. Return combined data
+        return response()->json([
+            'test_title' => $test->title,
+            'test_description' => $test->description,
+            'questions' => $questions
+        ]);
+    }
+    
+    public function submitAnswers(Request $request, $test_id) {
+        $validated = $request->validate([
+            'answers' => 'required|array', 
+            'answers.*.question_id' => 'required|exists:questions,id',
+            'answers.*.answer' => 'required',
+        ]);
+    
+        foreach ($validated['answers'] as $answer) {
+            Answer::create([
+                'user_id' => auth()->id(),
+                'question_id' => $answer['question_id'],
+                'test_id' => $test_id,
+                'response' => $answer['answer'],
+            ]);
+        }
+    
+        return response()->json(['message' => 'Answers submitted!']);
     }
 
     /**

@@ -29,4 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Test assignments
     Route::post('tests/{test}/assign', [TestAssignmentController::class, 'assign']);
     Route::post('tests/{test}/enroll', [TestAssignmentController::class, 'enroll']);
+
+    // Test taking
+    Route::get('/tests/{test_id}/questions', [TestController::class, 'getQuestions']);
+    Route::post('/tests/{test_id}/submit', [TestController::class, 'submitAnswers']);
 });

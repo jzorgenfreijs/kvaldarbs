@@ -13,7 +13,7 @@ const authStore = useAuthStore();
 
 const testTitle = ref('');
 const testDescription = ref('');
-const isPublic = ref(false);
+const isPublic = ref(true);
 const testPassword = ref('');
 const selectedType = ref(null);
 const addedQuestions = ref([]);
@@ -26,17 +26,6 @@ const questionTypes = [
   { text: 'True/False', value: 'true_false', component: TrueFalse },
   { text: 'Text Answer', value: 'text', component: TextAnswer }
 ];
-
-const initCsrf = async () => {
-  try {
-    await fetch('http://localhost:8000/sanctum/csrf-cookie', {
-      credentials: 'include'
-    });
-  } catch (error) {
-    console.error('CSRF initialization failed:', error);
-    throw new Error('Security verification failed');
-  }
-};
 
 const getXsrfToken = () => {
   return document.cookie
@@ -88,10 +77,20 @@ const submitTest = async () => {
     return;
   }
 
+  const invalidQuestions = addedQuestions.value.filter(q => {
+    return q.type === 'multiple_choice' && 
+          (!q.data.correctAnswer || q.data.correctAnswer.length === 0);
+  });
+
+  if (invalidQuestions.length > 0) {
+    errorMessage.value = 'Please select at least one correct answer for all multiple choice questions';
+    return;
+  }
+
   isSubmitting.value = true;
 
   try {
-    await initCsrf();
+    await authStore.getToken()
 
     const testData = {
       title: testTitle.value,
@@ -101,12 +100,18 @@ const submitTest = async () => {
       questions: addedQuestions.value.map((q, index) => ({
         type: q.type,
         question_text: q.data.questionText,
-        options: q.data.options || null,
-        correct_answers: q.data.correctAnswer || null,
+        options: q.type === 'text' ? null : q.data.options,
+        correct_answers: q.type === 'multiple_choice' 
+          ? q.data.correctAnswer
+          : Array.isArray(q.data.correctAnswer) 
+            ? q.data.correctAnswer 
+            : [q.data.correctAnswer],
         points: 1,
         order_index: index + 1
       }))
     };
+
+    console.log('Submitting test data:', testData); // Debug log
 
     const response = await fetch('http://localhost:8000/api/tests', {
       method: 'POST',
@@ -127,12 +132,12 @@ const submitTest = async () => {
     }
 
     if (!response.ok) {
-      const error = await response.text();
-      throw new Error(error || 'Failed to save test');
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to save test');
     }
 
     const result = await response.json();
-    router.push(`/test/${result.id}`);
+    router.push(`/my-tests`);
     
   } catch (error) {
     errorMessage.value = error.message;
@@ -144,7 +149,6 @@ const submitTest = async () => {
 
 onMounted(async () => {
   try {
-    await initCsrf();
     await authStore.getUser();
     if (!authStore.user) {
       router.push('/login');
@@ -170,6 +174,7 @@ onMounted(async () => {
         v-model="testPassword" 
         label="Test Password (Optional)" 
         class="mb-6"
+        :disabled="isPublic"
       />
 
       <div class="space-y-4 mb-6">

@@ -4,11 +4,11 @@ import { ref, watch } from 'vue';
 const props = defineProps({
   questionText: String,
   options: Array,
-  correctAnswers: Array
+  correctAnswer: Array
 });
 
-const emit = defineEmits(['update:questionText', 'update:options', 'update:correctAnswers']);
-const selectedCorrectIndices = ref(props.correctAnswers || []);
+const emit = defineEmits(['update:questionText', 'update:options', 'update:correctAnswer']);
+const selectedCorrectIndices = ref(props.correctAnswer || []);
 
 const handleQuestionTextChange = (event) => {
   emit('update:questionText', event.target.innerText);
@@ -29,11 +29,11 @@ const updateCorrectAnswers = (index) => {
     selectedCorrectIndices.value = selectedCorrectIndices.value.filter(i => i !== index);
   }
   
-  emit('update:correctAnswers', [...selectedCorrectIndices.value]);
+  emit('update:correctAnswer', [...selectedCorrectIndices.value]);
 };
 
 
-watch(() => props.correctAnswers, (newVal) => {
+watch(() => props.correctAnswer, (newVal) => {
   if (JSON.stringify(newVal) !== JSON.stringify(selectedCorrectIndices.value)) {
     selectedCorrectIndices.value = newVal ? [...newVal] : [];
   }
@@ -57,7 +57,7 @@ watch(() => props.correctAnswers, (newVal) => {
         v-for="(option, index) in options"
         :key="index"
         :model-value="selectedCorrectIndices.includes(index)"
-        @update:model-value="updateCorrectAnswers(index)"
+        @update:model-value="updateCorrectAnswers(index); console.log(selectedCorrectIndices)"
         density="compact"
       >
         <template v-slot:label>

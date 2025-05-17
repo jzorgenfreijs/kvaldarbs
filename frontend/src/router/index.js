@@ -6,6 +6,7 @@ import Profile from "../views/Profile.vue";
 import MyTests from "../views/MyTests.vue";
 import CreateTest from "../views/CreateTest.vue";
 import TestList from "../views/TestList.vue";
+import TakeTest from "../views/TakeTest.vue";
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: "/tests",
     name: "Tests",
     component: TestList,
+  },
+  {
+    path: '/test/:id',
+    name: 'TakeTest',
+    component: TakeTest,
   },
 ];
 

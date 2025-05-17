@@ -18,7 +18,7 @@ const fetchPublicTests = async () => {
     });
     tests.value = response.data.map(test => ({
       ...test,
-      enrollment_status: null // No enrollment status for public listing
+      enrollment_status: null
     }));
   } catch (err) {
     error.value = err.response?.data?.message || 'Failed to load public tests';
@@ -35,7 +35,7 @@ const enrollInTest = async (testId) => {
       password: password
     });
     alert('Successfully enrolled in test!');
-    await fetchPublicTests(); // Refresh the list
+    await fetchPublicTests();
   } catch (err) {
     alert(err.response?.data?.message || 'Failed to enroll in test');
   }
