@@ -1,6 +1,7 @@
 <script setup>
 import HeaderBar from '../components/HeaderBar.vue';
 import TestListItem from '../components/TestListItem.vue';
+import TeacherTestView from '../components/TeacherTestView.vue';
 
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
@@ -12,6 +13,8 @@ const authStore = useAuthStore();
 const tests = ref([]);
 const isLoading = ref(true);
 const error = ref(null);
+const selectedTest = ref(null);
+const showTestDialog = ref(false);
 
 const fetchTests = async () => {
   try {
@@ -28,20 +31,23 @@ const fetchTests = async () => {
   }
 };
 
+const handleTestClick = (test) => {
+  if (authStore.user?.role === 'teacher') {
+    selectedTest.value = test;
+    showTestDialog.value = true;
+  } else {
+    router.push(`/test/${test.id}`);
+  }
+};
+
 onMounted(async () => {
   await authStore.getUser();
-
-  if (authStore.user) {
-    await fetchTests();
-  }
-});
-
-function handleRedirect() {
   if (!authStore.user) {
     router.push('/login');
   }
-}
+  await fetchTests();
 
+});
 </script>
 
 <template>
@@ -73,7 +79,8 @@ function handleRedirect() {
             <TestListItem 
               v-for="test in tests" 
               :key="test.id" 
-              :test="test" 
+              :test="test"
+              @click="handleTestClick(test)"
             />
           </div>
           
@@ -98,7 +105,8 @@ function handleRedirect() {
           <TestListItem 
             v-for="test in tests.filter(t => t.enrollment_status === 'enrolled')" 
             :key="test.id" 
-            :test="test" 
+            :test="test"
+            @click="handleTestClick(test)"
           />
         </div>
         
@@ -108,8 +116,13 @@ function handleRedirect() {
         </div>
       </div>
     </div>
-  </div>
-  <div v-else>
-    <div v-show="handleRedirect()"></div>
+
+    <v-dialog v-model="showTestDialog" max-width="600">
+      <TeacherTestView 
+        v-if="selectedTest"
+        :test="selectedTest"
+        @close="showTestDialog = false"
+      />
+    </v-dialog>
   </div>
 </template>

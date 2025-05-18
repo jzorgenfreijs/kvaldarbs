@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
 
 const props = defineProps({
   test: {
@@ -12,26 +11,34 @@ const props = defineProps({
       description: '',
       is_public: false,
       question_count: 0,
-      enrollment_status: null, // 'creator', 'enrolled', or null
+      enrollment_status: null,
       created_at: ''
     })
+  },
+  isTeacher: {
+    type: Boolean,
+    default: false
   }
 });
 
-const router = useRouter();
+const emit = defineEmits(['teacher-click']);
 
 const formattedDate = computed(() => {
   return new Date(props.test.created_at).toLocaleDateString();
 });
 
-const navigateToTest = () => {
-  router.push(`/test/${props.test.id}`);
+const handleClick = () => {
+  if (props.isTeacher) {
+    emit('teacher-click');
+  } else {
+    emit('student-click');
+  }
 };
 </script>
 
 <template>
   <div 
-    @click="navigateToTest"
+    @click="handleClick"
     class="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer bg-white"
   >
     <div class="flex justify-between items-start mb-2">

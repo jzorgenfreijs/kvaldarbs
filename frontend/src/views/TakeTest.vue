@@ -114,8 +114,11 @@ const submitTest = async () => {
 
 onMounted(async () => {
   await authStore.getUser();
-  if (!authStore.user) router.push('/login');
-  else await loadTest();
+  if (!authStore.user) {
+    router.push('/login');
+  } else {
+    await loadTest();
+  }
 });
 </script>
 

@@ -26,7 +26,6 @@ const updateCorrectAnswer = (selectedOptionText) => {
   emit('update:correctAnswer', [selectedIndex])
 };
 
-// Sync with external changes to correctAnswer
 watch(() => props.correctAnswer, (newVal) => {
   selectedCorrectIndex.value = newVal?.[0] ?? null;
 }, { deep: true });

@@ -24,7 +24,7 @@ const isOpen = ref(false);
           </router-link>
 
           <div class="hidden justify-around space-x-4 md:flex">
-            <router-link class="relative text-gray-700 link-underline" to="/dashboard">Home</router-link>
+            <router-link class="relative text-gray-700 link-underline" to="/">Home</router-link>
             <router-link class="relative text-gray-700 link-underline" to="/tests">Tests</router-link>
             <router-link v-if="authStore.user" class="relative text-gray-700 link-underline" to="/my-tests">My Tests</router-link>
           </div>
