@@ -19,4 +19,19 @@ class Answer extends Model
     protected $casts = [
         'response' => 'array',
     ];
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function test()
+    {
+        return $this->belongsTo(Test::class);
+    }
 }

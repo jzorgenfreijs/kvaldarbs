@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TestAssignmentController;
+use App\Http\Controllers\CompletedTestController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -25,6 +26,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Tests
     Route::apiResource('tests', TestController::class);
     Route::get('/public-tests', [TestController::class, 'publicIndex']);
+    Route::get('/tests/{test}/completed-students', [CompletedTestController::class, 'getCompletedStudents']);
+    Route::get('/tests/{test}/students/{user}/answers', [CompletedTestController::class, 'getStudentAnswers']);
+    Route::post('/tests/{test}/students/{user}/grade', [CompletedTestController::class, 'saveGrade']);
+    Route::get('/tests/{test}/grades', [CompletedTestController::class, 'getTestGrades']);
     
     // Test assignments
     Route::post('tests/{test}/assign', [TestAssignmentController::class, 'assign']);

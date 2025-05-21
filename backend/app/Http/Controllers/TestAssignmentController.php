@@ -24,8 +24,6 @@ class TestAssignmentController extends Controller
 
         $assignment = $test->assignments()->firstOrCreate([
             'student_id' => auth()->id()
-        ], [
-            'status' => 'assigned'
         ]);
 
         return response()->json($assignment);
@@ -63,9 +61,6 @@ class TestAssignmentController extends Controller
                 [
                     'test_id' => $test->id,
                     'student_id' => $user->id
-                ],
-                [
-                    'status' => 'assigned'
                 ]
             );
 

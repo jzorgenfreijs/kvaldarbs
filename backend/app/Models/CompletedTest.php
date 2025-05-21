@@ -13,4 +13,19 @@ class CompletedTest extends Model
         'user_id',
         'test_id'
     ];
+
+    public function student()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function test()
+    {
+        return $this->belongsTo(Test::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class, 'completion_id');
+    }
 }
