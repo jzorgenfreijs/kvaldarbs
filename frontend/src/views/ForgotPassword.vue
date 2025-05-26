@@ -20,23 +20,15 @@
         if (/^[a-z0-9.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
 
         return 'Must be a valid e-mail.'
-      },
-      password (value) {
-        if (value?.length >= 8) return true
-
-        return 'Please enter your password'
-      },
+      }
     },
   })
   
   const email = useField('email')
-  const password = useField('password')
-  const show_pass = ref(false)
 
   const submit = handleSubmit(async () => {
-    await authStore.handleLogin({
+    await authStore.handleForgotPass({
       email: email.value.value,
-      password: password.value.value
     });
   });
   
@@ -46,7 +38,7 @@
 <template>
   <v-container fluid class="d-flex justify-center align-center h-screen bg-black">
     <v-card class="pa-6" min-width="375" elevation="10" color="grey-darken-4">
-      <v-card-title class="px-1"><v-btn icon="mdi-arrow-left" :width="30" :height="30" rounded="lg" class="mr-2" @click="router.push('/')"></v-btn>Log In</v-card-title>
+      <v-card-title class="px-1"><v-btn icon="mdi-arrow-left" :width="30" :height="30" rounded="lg" class="mr-2" @click="router.push('/')"></v-btn>Forgot Password</v-card-title>
 
       <form @submit.prevent="submit">
         <v-text-field
@@ -59,31 +51,13 @@
           class="my-2"
         ></v-text-field>
 
-        <v-text-field
-          v-model="password.value.value"
-          :append-inner-icon="show_pass ? 'mdi-eye' : 'mdi-eye-off'"
-          :error-messages="password.errorMessage.value"
-          :readonly="loading"
-          :rules="[required]"
-          :type="show_pass ? 'text' : 'password'"
-          label="Password"
-          placeholder="Enter your password"
-          density="comfortable"
-          @click:append-inner="show_pass = !show_pass"
-          class="my-2"
-        ></v-text-field>
-        
-
         <v-btn
           class="me-4 my-2"
           type="submit"
           color="#2d815c"
         >
-          Log In
+          Send Email
         </v-btn>
-
-        <p><router-link to="/forgot-password">Forgot password?</router-link></p>
-        <p>Don't have an account? <router-link to="/register">Register</router-link></p>
   
       </form>
     </v-card>

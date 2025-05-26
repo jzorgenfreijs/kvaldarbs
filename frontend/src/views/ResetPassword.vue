@@ -1,11 +1,12 @@
 <script setup>
   import { ref, onMounted } from 'vue'
   import { useField, useForm } from 'vee-validate'
-  import { useRouter } from 'vue-router';
+  import { useRouter, useRoute } from 'vue-router';
   import { useAuthStore } from '../stores/auth';
 
   const authStore = useAuthStore();
   const router = useRouter();
+  const route = useRoute();
 
   onMounted(async () => {
     await authStore.getUser();
@@ -16,27 +17,28 @@
 
   const { handleSubmit } = useForm({
     validationSchema: {
-      email (value) {
-        if (/^[a-z0-9.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
-
-        return 'Must be a valid e-mail.'
-      },
       password (value) {
         if (value?.length >= 8) return true
 
         return 'Please enter your password'
       },
+      confirm_pass (value) {
+        if (value == password.value.value) return true
+
+        return 'Password do not match.'
+      },
     },
   })
-  
-  const email = useField('email')
   const password = useField('password')
+  const confirm_pass = useField('confirm_pass')
   const show_pass = ref(false)
 
   const submit = handleSubmit(async () => {
-    await authStore.handleLogin({
-      email: email.value.value,
-      password: password.value.value
+    await authStore.handleResetPassword({
+      password: password.value.value,
+      password_confirmation: confirm_pass.value.value,
+      email: route.query.email,
+      token: route.params.token,
     });
   });
   
@@ -49,16 +51,6 @@
       <v-card-title class="px-1"><v-btn icon="mdi-arrow-left" :width="30" :height="30" rounded="lg" class="mr-2" @click="router.push('/')"></v-btn>Log In</v-card-title>
 
       <form @submit.prevent="submit">
-        <v-text-field
-          v-model="email.value.value"
-          :error-messages="email.errorMessage.value"
-          label="E-mail"
-          placeholder="example@gmail.com"
-          type="email"
-          density="comfortable"
-          class="my-2"
-        ></v-text-field>
-
         <v-text-field
           v-model="password.value.value"
           :append-inner-icon="show_pass ? 'mdi-eye' : 'mdi-eye-off'"
@@ -73,17 +65,23 @@
           class="my-2"
         ></v-text-field>
         
+        <v-text-field
+          v-model="confirm_pass.value.value"
+          :error-messages="confirm_pass.errorMessage.value"
+          :rules="[required]"
+          label="Confirm Password"
+          type="password"
+          density="comfortable"
+          class="my-2"
+        ></v-text-field>
 
         <v-btn
           class="me-4 my-2"
           type="submit"
           color="#2d815c"
         >
-          Log In
+          Reset
         </v-btn>
-
-        <p><router-link to="/forgot-password">Forgot password?</router-link></p>
-        <p>Don't have an account? <router-link to="/register">Register</router-link></p>
   
       </form>
     </v-card>

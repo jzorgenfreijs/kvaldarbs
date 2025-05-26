@@ -18,6 +18,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\TestAssignmentController;
 use App\Http\Controllers\CompletedTestController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\UserController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -42,4 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Results
     Route::get('/student/completed-tests', [GradeController::class, 'getCompletedTestsWithGrades']);
+
+    //User
+    Route::post('/change-password', [UserController::class, 'changePassword']);
+    Route::delete('/delete-account', [UserController::class, 'deleteAccount']);
 });
