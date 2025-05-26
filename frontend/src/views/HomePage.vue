@@ -45,11 +45,6 @@ onMounted(async () => {
     <v-lazy :options="{'threshold':0.5}" transition="fade-transition" class="w-full lg:w-1/2 lg:pl-8">
         <div>
             <v-skeleton-loader type="image"></v-skeleton-loader>
-            <!-- <img
-          src="@/assets/overview0.png"
-          alt="Online test dashboard"
-          class="w-full rounded-xl shadow-xl ring-1 ring-gray-400/10"
-        /> -->
         </div>
     </v-lazy>
 </section>
@@ -58,11 +53,6 @@ onMounted(async () => {
     <v-lazy :options="{'threshold':0.5}" transition="fade-transition" class="w-full mt-8 lg:w-1/2 lg:pr-8 lg:mt-0">
         <div>
             <v-skeleton-loader type="image"></v-skeleton-loader>
-            <!-- <img
-              src="@/assets/overview1.png"
-              alt="Customizable test settings"
-              class="w-full rounded-xl shadow-xl ring-1 ring-gray-400/10"
-            /> -->
         </div>
     </v-lazy>
     <div class="w-full lg:w-1/2 lg:pl-8">

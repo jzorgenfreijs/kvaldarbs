@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\Validator;
 
 class TestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $user = Auth::user();
@@ -63,9 +60,6 @@ class TestController extends Controller
         return response()->json($tests);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -104,7 +98,6 @@ class TestController extends Controller
 
         return response()->json($test->load('questions'), 201);
     }
-
 
     public function publicIndex(Request $request)
     {

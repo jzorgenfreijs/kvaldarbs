@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TestAssignmentController;
 use App\Http\Controllers\CompletedTestController;
+use App\Http\Controllers\GradeController;
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -38,4 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Test taking
     Route::get('/tests/{test_id}/questions', [TestController::class, 'getQuestions']);
     Route::post('/tests/{test_id}/submit', [TestController::class, 'submitAnswers']);
+
+    //Results
+    Route::get('/student/completed-tests', [GradeController::class, 'getCompletedTestsWithGrades']);
 });
