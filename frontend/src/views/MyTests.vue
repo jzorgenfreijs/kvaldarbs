@@ -20,13 +20,13 @@ const completedTests = ref([]);
 const fetchTests = async () => {
   try {
     const [testsResponse, completedResponse] = await Promise.all([
-      axios.get('http://localhost:8000/api/tests', {
+      axios.get('https://api.jzorgenfreijs.com/api/tests', {
         headers: {
           'Authorization': `Bearer ${authStore.token}`
         }
       }),
       authStore.user?.role === 'student' ?
-        axios.get('http://localhost:8000/api/student/completed-tests', {
+        axios.get('https://api.jzorgenfreijs.com/api/student/completed-tests', {
           headers: {
             'Authorization': `Bearer ${authStore.token}`
           }

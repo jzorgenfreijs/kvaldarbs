@@ -33,7 +33,7 @@ const getXsrfToken = () => {
 
 const loadTest = async () => {
   try {
-    const response = await fetch(`http://localhost:8000/api/tests/${route.params.id}/questions`, {
+    const response = await fetch(`https://api.jzorgenfreijs.com/api/tests/${route.params.id}/questions`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -85,7 +85,7 @@ const submitTest = async () => {
 
     console.log('Submitting:', JSON.stringify(submissionData, null, 2));
 
-    const response = await fetch(`http://localhost:8000/api/tests/${route.params.id}/submit`, {
+    const response = await fetch(`https://api.jzorgenfreijs.com/api/tests/${route.params.id}/submit`, {
       method: 'POST',
       credentials: 'include',
       headers: {

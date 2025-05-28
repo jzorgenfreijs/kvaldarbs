@@ -14,7 +14,7 @@ const searchQuery = ref('');
 
 const fetchPublicTests = async () => {
   try {
-    const response = await axios.get('http://localhost:8000/api/public-tests', {
+    const response = await axios.get('https://api.jzorgenfreijs.com/api/public-tests', {
       params: {
         search: searchQuery.value
       }
@@ -47,7 +47,7 @@ const enrollInTest = async (testId, isPublic) => {
       }
     }
     
-    await axios.post(`http://localhost:8000/api/tests/${testId}/enroll`, {
+    await axios.post(`https://api.jzorgenfreijs.com/api/tests/${testId}/enroll`, {
       password: password
     });
     alert('Successfully enrolled in test!');

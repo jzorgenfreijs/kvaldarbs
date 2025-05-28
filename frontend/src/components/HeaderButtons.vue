@@ -38,7 +38,7 @@ window.onclick = function(event) {
                 :width="50"
                 :height="50"
                 aspect-ratio="1/1"
-                src="http://localhost:8000/storage/frontend-pics/picture-placeholder.png"
+                src="https://api.jzorgenfreijs.com/storage/frontend-pics/picture-placeholder.png"
                 v-bind="props"
                 class="rounded-xl hover:bg-gray-200"
                 ></v-img>

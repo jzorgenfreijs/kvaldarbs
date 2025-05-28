@@ -45,7 +45,7 @@ const enrollStudents = async () => {
       .filter(email => email.length > 0);
 
     await axios.post(
-      `http://localhost:8000/api/tests/${props.test.id}/assign`,
+      `https://api.jzorgenfreijs.com/api/tests/${props.test.id}/assign`,
       { emails },
       {
         headers: {

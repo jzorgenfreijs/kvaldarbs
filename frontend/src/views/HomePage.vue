@@ -18,7 +18,7 @@ onMounted(async () => {
     <HeaderBar/>
 </div>
 <div class="bg-white cursor-default">
-    <v-parallax src="http://localhost:8000/storage/frontend-pics/BG_pattern_2.svg" class="flex align-center">
+    <v-parallax src="https://api.jzorgenfreijs.com/storage/frontend-pics/BG_pattern_2.svg" class="flex align-center">
         <div class="relative isolate px-6 pt-14 lg:px-8">
             <div class="mx-auto max-w-2xl py-16 text-center sm:py-48 lg:py-56 bg-white shadow-md">
                 <h1 class="text-heading-1 font-heading tracking-tight text-gray-900">

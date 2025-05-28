@@ -32,7 +32,7 @@ async function deleteAccount() {
     <div class="w-[90%] lg:w-[65%] h-full bg-gray-300 left-right-shadow">
       <div class="bg-gray-200 w-full h-64 p-6 flex justify-between">
         <div class="flex flex-col justify-end">
-          <v-avatar image="http://localhost:8000/storage/frontend-pics/picture-placeholder.png" size="100" class="ml-2"></v-avatar>
+          <v-avatar image="https://api.jzorgenfreijs.com/storage/frontend-pics/picture-placeholder.png" size="100" class="ml-2"></v-avatar>
           <v-list-item class="text-black">
             <v-list-item-title class="!text-2xl">{{ authStore.user.name }}</v-list-item-title>
             <v-list-item-subtitle class="!text-lg">{{ authStore.user.email }}</v-list-item-subtitle>
@@ -58,7 +58,7 @@ async function deleteAccount() {
   <div v-else>
     <div v-show="handleRedirect()"></div>
   </div>
-  
+
   <v-dialog v-model="showDeleteDialog" max-width="400">
     <v-card>
       <v-card-title class="text-h6">Are you sure?</v-card-title>

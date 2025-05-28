@@ -113,7 +113,7 @@ const submitTest = async () => {
 
     console.log('Submitting test data:', testData); // Debug log
 
-    const response = await fetch('http://localhost:8000/api/tests', {
+    const response = await fetch('https://api.jzorgenfreijs.com/api/tests', {
       method: 'POST',
       credentials: 'include',
       headers: {
