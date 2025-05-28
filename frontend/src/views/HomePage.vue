@@ -44,7 +44,13 @@ onMounted(async () => {
     </div>
     <v-lazy :options="{'threshold':0.5}" transition="fade-transition" class="w-full lg:w-1/2 lg:pl-8">
         <div>
-            <v-skeleton-loader type="image"></v-skeleton-loader>
+            <!-- <v-skeleton-loader type="image"></v-skeleton-loader> -->
+             <v-img
+                src="https://api.jzorgenfreijs.com/storage/frontend-pics/ofspace-llc-ABdQMHYg3ww-unsplash.jpg"
+            ></v-img>
+            <!-- Photo by Ofspace LLC on Unsplash - https://unsplash.com/photos/person-holding-a-silver-laptop-computer-ABdQMHYg3ww -->
+            Photo by <a href="https://unsplash.com/@ofspace?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Ofspace LLC</a> on <a href="https://unsplash.com/photos/person-holding-a-silver-laptop-computer-ABdQMHYg3ww?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+      
         </div>
     </v-lazy>
 </section>
@@ -52,14 +58,21 @@ onMounted(async () => {
 <section class="mx-auto mt-10 flex flex-col-reverse items-center justify-between max-w-7xl px-6 mb-40 lg:flex-row">
     <v-lazy :options="{'threshold':0.5}" transition="fade-transition" class="w-full mt-8 lg:w-1/2 lg:pr-8 lg:mt-0">
         <div>
-            <v-skeleton-loader type="image"></v-skeleton-loader>
+            <!-- <v-skeleton-loader type="image"></v-skeleton-loader> -->
+            <v-img
+                src="https://api.jzorgenfreijs.com/storage/frontend-pics/john-FlPc9_VocJ4-unsplash.jpg"
+            ></v-img>
+            <!-- Photo by Josh on Unsplash - https://unsplash.com/photos/person-using-laptop-FlPc9_VocJ4 -->
+            Photo by <a href="https://unsplash.com/@johnishappysometimes?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">John</a> on <a href="https://unsplash.com/photos/person-using-laptop-FlPc9_VocJ4?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
         </div>
     </v-lazy>
     <div class="w-full lg:w-1/2 lg:pl-8">
         <h1 class="text-3xl font-bold mb-4">Advanced Test Management</h1>
         <p class="text-lg">
-            Customize your test experience with various difficulty levels, time limits, and question formats. Track your progress and get instant feedback to improve your performance.
+            Customize your test experience with various difficulty levels and question formats. Track your progress and get instant feedback to improve your performance.
         </p>
     </div>
 </section>
+<div class="h-4">
+</div>
 </template>

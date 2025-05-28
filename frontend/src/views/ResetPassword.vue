@@ -46,8 +46,8 @@
 
 
 <template>
-  <v-container fluid class="d-flex justify-center align-center h-screen bg-black">
-    <v-card class="pa-6" min-width="375" elevation="10" color="grey-darken-4">
+  <v-container fluid class="d-flex justify-center align-center h-screen bg-gray-100">
+    <v-card class="pa-6" min-width="375" elevation="10" color="grey-lighten-4">
       <v-card-title class="px-1"><v-btn icon="mdi-arrow-left" :width="30" :height="30" rounded="lg" class="mr-2" @click="router.push('/')"></v-btn>Log In</v-card-title>
 
       <form @submit.prevent="submit">
